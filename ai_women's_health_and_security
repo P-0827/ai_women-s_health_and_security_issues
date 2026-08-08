@@ -1,0 +1,169 @@
+{
+  "app_name": "SheShield: Women's Health & Safety Assistant",
+  "description": "A unified AI assistant combining women's health guidance (SheCare AI) and women's safety/emergency support (SheSecure AI), built on AWS PartyRock.",
+  "problem_statements_addressed": [
+    "SheCare AI - Women's health & wellness assistant",
+    "SheSecure AI - Women's safety & emergency assistant"
+  ],
+  "team": {
+    "hackathon": "Women Who Masters",
+    "organized_by": "Aspire For Her, in collaboration with Logitech",
+    "members": ["Poojitha", "Kavala Kavya Sai", "Sneha Nayak"]
+  },
+  "app_flow": {
+    "entry_widget": "user_profile_input",
+    "description": "User selects life stage first; this drives personalization across both health and safety widgets (the core innovation of this app)."
+  },
+  "widgets": [
+    {
+      "id": "user_profile_input",
+      "type": "Text Input",
+      "label": "Tell us about yourself",
+      "placeholder": "e.g., I'm a teenager / I'm pregnant / I'm postpartum / I'm a working professional / I'm a student",
+      "purpose": "Captures life stage to personalize downstream widgets"
+    },
+    {
+      "id": "language_choice",
+      "type": "Selector",
+      "label": "Preferred language",
+      "options": ["English", "Telugu", "Hindi", "Tenglish"],
+      "purpose": "Multilingual accessibility"
+    },
+    {
+      "id": "symptom_input",
+      "type": "Text Input",
+      "label": "Describe your symptoms or health concern",
+      "placeholder": "e.g., cramps, missed period, dizziness, fatigue"
+    },
+    {
+      "id": "symptom_triage_output",
+      "type": "Text Generation (Chat)",
+      "label": "Health Guidance",
+      "model": "Claude",
+      "prompt": "You are a compassionate women's health assistant. The user's life stage is: {{user_profile_input}}. Based on the symptoms described: {{symptom_input}}, classify urgency as: Self-care / See a doctor soon / Seek emergency care. Explain why in 2-3 simple sentences in {{language_choice}}. Never diagnose; always recommend professional consultation for anything serious.",
+      "inputs": ["user_profile_input", "symptom_input", "language_choice"]
+    },
+    {
+      "id": "cycle_tracker_input",
+      "type": "Text Input",
+      "label": "Enter your last period start date (DD-MM-YYYY)",
+      "placeholder": "e.g., 01-08-2026"
+    },
+    {
+      "id": "cycle_tracker_output",
+      "type": "Text Generation",
+      "label": "Cycle & Fertility Insights",
+      "model": "Claude",
+      "prompt": "Based on the last period start date: {{cycle_tracker_input}}, estimate the next expected period date, fertile window, and give 2 practical self-care tips for this phase. Keep tone supportive and factual. Respond in {{language_choice}}.",
+      "inputs": ["cycle_tracker_input", "language_choice"]
+    },
+    {
+      "id": "myth_input",
+      "type": "Text Input",
+      "label": "Type a health myth you've heard",
+      "placeholder": "e.g., You shouldn't exercise during periods"
+    },
+    {
+      "id": "myth_buster_output",
+      "type": "Text Generation",
+      "label": "Myth vs Fact",
+      "model": "Claude",
+      "prompt": "The user shared this women's health myth: {{myth_input}}. Clearly state whether it is TRUE or FALSE, then explain the medical fact in 2-3 simple sentences. Be respectful of cultural context, non-judgmental in tone. Respond in {{language_choice}}.",
+      "inputs": ["myth_input", "language_choice"]
+    },
+    {
+      "id": "diet_plan_output",
+      "type": "Text Generation",
+      "label": "Personalized Diet & Exercise Tips",
+      "model": "Claude",
+      "prompt": "Based on life stage: {{user_profile_input}} and any symptoms mentioned: {{symptom_input}}, suggest a simple daily diet and light exercise routine suited to this stage. Keep it practical and achievable, in {{language_choice}}.",
+      "inputs": ["user_profile_input", "symptom_input", "language_choice"]
+    },
+    {
+      "id": "hospital_city_input",
+      "type": "Text Input",
+      "label": "Enter your city",
+      "placeholder": "e.g., Hyderabad"
+    },
+    {
+      "id": "hospital_finder_output",
+      "type": "Text Generation",
+      "label": "Hospital & Gynecologist Guidance",
+      "model": "Claude",
+      "prompt": "The user is located in {{hospital_city_input}} and has this concern: {{symptom_input}}. Suggest the type of medical facility/specialist they should look for (e.g., gynecologist, maternity hospital, general physician) and general guidance on what to check when choosing one nearby. Do not fabricate specific hospital names or addresses; instead advise how to search reliably (Google Maps, government health portal, helpline).",
+      "inputs": ["hospital_city_input", "symptom_input"]
+    },
+    {
+      "id": "safety_scenario_input",
+      "type": "Text Input",
+      "label": "Describe your situation",
+      "placeholder": "e.g., walking alone at night, using a cab, at a new workplace"
+    },
+    {
+      "id": "safety_plan_output",
+      "type": "Text Generation (Chat)",
+      "label": "Personalized Safety Plan",
+      "model": "Claude",
+      "prompt": "The user's life stage is {{user_profile_input}} and their situation is: {{safety_scenario_input}}. Provide a tailored safety checklist of 4-6 practical, actionable tips for this specific scenario and life stage. Respond in {{language_choice}}.",
+      "inputs": ["user_profile_input", "safety_scenario_input", "language_choice"]
+    },
+    {
+      "id": "sos_location_input",
+      "type": "Text Input",
+      "label": "Your current location",
+      "placeholder": "e.g., near XYZ bus stand, Ameerpet"
+    },
+    {
+      "id": "sos_situation_input",
+      "type": "Text Input",
+      "label": "Briefly describe the emergency",
+      "placeholder": "e.g., being followed, feel unsafe, need immediate help"
+    },
+    {
+      "id": "sos_message_output",
+      "type": "Text Generation",
+      "label": "SOS Message (ready to send)",
+      "model": "Claude",
+      "prompt": "Generate a short, clear emergency SOS text message using this info: Location: {{sos_location_input}}, Situation: {{sos_situation_input}}. The message should be under 40 words, urgent but calm, include location, and ask for immediate help. Output only the message, ready to copy and send.",
+      "inputs": ["sos_location_input", "sos_situation_input"]
+    },
+    {
+      "id": "legal_helpline_input",
+      "type": "Selector",
+      "label": "Select the type of issue",
+      "options": ["Harassment", "Domestic issue", "Cyberstalking", "Workplace safety", "General emergency"]
+    },
+    {
+      "id": "legal_helpline_output",
+      "type": "Text Generation",
+      "label": "Legal Rights & Helpline Info",
+      "model": "Claude",
+      "prompt": "The user selected issue type: {{legal_helpline_input}}. Provide: (1) relevant Indian legal provisions (BNS/IPC sections, or applicable act) in simple language, (2) 2-3 official helpline numbers (e.g., Women Helpline 181, Police 100, Cyber Crime 1930), (3) one practical next step. Keep it factual and concise, in {{language_choice}}.",
+      "inputs": ["legal_helpline_input", "language_choice"]
+    },
+    {
+      "id": "red_flag_input",
+      "type": "Text Input",
+      "label": "Paste a message or conversation you're unsure about",
+      "placeholder": "Paste text here"
+    },
+    {
+      "id": "red_flag_output",
+      "type": "Text Generation",
+      "label": "Red Flag Analysis",
+      "model": "Claude",
+      "prompt": "Analyze the following message for manipulative, controlling, or predatory language patterns: {{red_flag_input}}. List any red flags found in bullet points with brief explanations, in a supportive, non-alarmist tone. If none found, reassure the user. Respond in {{language_choice}}.",
+      "inputs": ["red_flag_input", "language_choice"]
+    }
+  ],
+  "innovation_highlight": {
+    "feature": "Life-Stage Bridge Personalization",
+    "description": "The user_profile_input (life stage: teenager, pregnant, postpartum, working professional, student) feeds into BOTH the health widgets AND the safety widgets, so advice in both pillars is automatically tailored to the same life stage. This is what unifies the two problem statements into a single coherent product rather than two separate apps."
+  },
+  "future_scope": [
+    "Real GPS integration for live location sharing with emergency contacts",
+    "Hardware panic-button / wearable trigger integration",
+    "Integration with real hospital/doctor directory APIs",
+    "Offline SMS-based SOS fallback for low-connectivity areas"
+  ]
+}
